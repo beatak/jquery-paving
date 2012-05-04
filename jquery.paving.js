@@ -4,7 +4,8 @@ function($, window) {
 var DEFAULT_OPTIONS = {
   selector: '.stone',
   marking: 'paved',
-  callback: function () {}
+  callback: function () {},
+  finish: function () {}
 };
 
 /**
@@ -141,6 +142,12 @@ $.fn.paving = function () {
       defaults.callback($item[0]);
     }
     $parent.height(column[findColumnIndex(column, true)]);
+    setTimeout(
+      function () {
+        defaults.finish();
+      },
+      13
+    );
   };
 
   // ==============================
