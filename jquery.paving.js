@@ -52,7 +52,7 @@ $.fn.paving = function () {
       var def = getDefaults($this, opts);
       var $item = $(args[0]);
       if ($item.length === 0) {
-        console.log('nothing is to pave.');
+        // console.log('nothing is to pave.');
         return;
       }
       if (typeof def.lefts === 'undefined') {
