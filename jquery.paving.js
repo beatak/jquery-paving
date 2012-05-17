@@ -4,8 +4,8 @@ function($, window) {
 var DEFAULT_OPTIONS = {
   selector: '.stone',
   marking: 'paved',
-  callback: function () {},
-  finish: function () {}
+  callback: null,
+  finish: null
 };
 
 var MILSEC_FINISH = 13;
@@ -32,9 +32,11 @@ $.fn.paving = function () {
   var pave = function (parent, isAppending) {
     var i;
     var len;
+    var elm;
     var $parent = $(parent);
     var defaults = getDefaults($parent, opts);
     var $items = $parent.find( buildSelector(defaults.selector, (isAppending ? defaults.marking : undefined)) );
+    var callbackExists = typeof defaults.callback === 'function';
     if (typeof defaults.lefts === 'undefined') {
       isAppending = false;
     }
@@ -45,18 +47,14 @@ $.fn.paving = function () {
     if (!isAppending) {
       $.extend(defaults, buildFundamentals($parent, $items.first()));
     }
-    for(i = 0, len = $items.length; i < len; ++i) {
-      defaults.callback(
-        paveStone($items[i], defaults, i)
-      );
+    for (i = 0, len = $items.length; i < len; ++i) {
+      elm = paveStone($items[i], defaults, i);
+      if (callbackExists) {
+        defaults.callback(elm, defaults.column);
+      }
     }
-    $parent.height( defaults.column[findColumnIndex(defaults.column, true)] );
-    setTimeout(
-      function () {
-        defaults.finish();
-      },
-      MILSEC_FINISH
-    );
+
+    finishPaving($parent, defaults.finish, defaults.column);
   };
 
   var paveStone = function (item, defaults, i, index) {
@@ -65,6 +63,7 @@ $.fn.paving = function () {
     var lefts = defaults.lefts;
     var marking = defaults.marking;
     var column_len = defaults.column_len;
+    var count = defaults.count;
     var $item = $(item);
     var height = $item.outerHeight(true);
 
@@ -75,7 +74,7 @@ $.fn.paving = function () {
       }
     }
     if (index === undefined) {
-      if (i !== undefined && i < column_len) {
+      if (i !== undefined && count < column_len && i < column_len) {
         index = i;
       }
       else {
@@ -93,8 +92,23 @@ $.fn.paving = function () {
     $item.data('height', height);
     $item.attr('data-' + marking, 'true');
     column[index] = column[index] + height;
+    ++defaults.count;
 
     return item;
+  };
+
+  var finishPaving = function ($parent, finish, column) {
+    $parent.height( column[findColumnIndex(column, true)] );
+
+    if (typeof finish !== 'function') {
+      return;
+    }
+    setTimeout(
+      function () {
+        finish(column);
+      },
+      MILSEC_FINISH
+    );
   };
 
   // ==============================
@@ -119,6 +133,7 @@ $.fn.paving = function () {
     var result = 0;
     isTallest = isTallest || false;
     for (index in col) {
+      index = parseInt(index, 10);
       if (index === 0) {
         result = index;
       }
@@ -177,7 +192,8 @@ $.fn.paving = function () {
       container_offset: container_offset,
       lefts: lefts,
       column: column,
-      column_len: column_len
+      column_len: column_len,
+      count: 0
     };
   };
 
@@ -192,21 +208,13 @@ $.fn.paving = function () {
       pave(this, true); 
       return this;
     },
-    add: function (i) {
+    add: function (i, elm) {
       var $this = $(this);
       var def = getDefaults($this, opts);
       var $item = $(args[0]);
-      var index = args[1];
       $this.append($item);
-      paveStone($item[0], def, undefined, index);
-      $this.height( def.column[findColumnIndex(def.column, true)] );
-      setTimeout(
-        function () {
-          def.finish();
-        },
-        MILSEC_FINISH
-      );
-      return this;
+      paveStone($item[0], def, undefined, args[1]);
+      finishPaving($this, def.finish, def.column);
     }
   };
 
