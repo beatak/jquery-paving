@@ -8,29 +8,106 @@ var DEFAULT_OPTIONS = {
   finish: function () {}
 };
 
+var MILSEC_FINISH = 13;
+
 /**
  * short and simple way to layout block elements into neatly
  * tightly packed.
  */
 $.fn.paving = function () {
-  var method, opts;
+  var method, opts, args;
+
+  // determin method, opts and arguments
   if (typeof arguments[0] === 'string') {
     method = arguments[0].toLowerCase();
     opts = arguments[1];
+    args = Array.prototype.slice.call(arguments, 2);
   }
   else {
     method = 'init';
     opts = arguments[0];
+    args = Array.prototype.slice.call(arguments, 2);
   }
 
+  var pave = function (parent, isAppending) {
+    var i;
+    var len;
+    var $parent = $(parent);
+    var defaults = getDefaults($parent, opts);
+    var $items = $parent.find( buildSelector(defaults.selector, (isAppending ? defaults.marking : undefined)) );
+    if (typeof defaults.lefts === 'undefined') {
+      isAppending = false;
+    }
+    if ($items.length === 0) {
+      // console.log('no elements to pave');
+      return;
+    }
+    if (!isAppending) {
+      $.extend(defaults, buildFundamentals($parent, $items.first()));
+    }
+    for(i = 0, len = $items.length; i < len; ++i) {
+      defaults.callback(
+        paveStone($items[i], defaults, i)
+      );
+    }
+    $parent.height( defaults.column[findColumnIndex(defaults.column, true)] );
+    setTimeout(
+      function () {
+        defaults.finish();
+      },
+      MILSEC_FINISH
+    );
+  };
+
+  var paveStone = function (item, defaults, i, index) {
+    var container_offset = defaults.container_offset;
+    var column = defaults.column;
+    var lefts = defaults.lefts;
+    var marking = defaults.marking;
+    var column_len = defaults.column_len;
+    var $item = $(item);
+    var height = $item.outerHeight(true);
+
+    if (index !== undefined) {
+      index = parseInt(index, 10);
+      if (isNaN(index) || index >= column_len) {
+        index = undefined;
+      }
+    }
+    if (index === undefined) {
+      if (i !== undefined && i < column_len) {
+        index = i;
+      }
+      else {
+        index = findColumnIndex(column);
+      }
+    }
+
+    // marking        
+    var obj =  {
+      position: 'absolute',
+      left: container_offset.left + lefts[index],
+      top: container_offset.top + column[index]
+    };
+    $item.css(obj);
+    $item.data('height', height);
+    $item.attr('data-' + marking, 'true');
+    column[index] = column[index] + height;
+
+    return item;
+  };
+
+  // ==============================
+
   var getDefaults = function ($parent, opts) {
+    var name;
     var defaults = $parent.data('paving-defaults');
     if (!defaults) {
       defaults = $.extend({}, DEFAULT_OPTIONS, opts || {});
       $parent.data('paving-defaults', defaults);
     }
     else {
-      for (var name in opts) {
+      for (name in opts) {
         defaults[name] = opts[name];
       }
     }
@@ -38,9 +115,10 @@ $.fn.paving = function () {
   };
 
   var findColumnIndex = function (col, isTallest) {
-    isTallest = isTallest || false;
+    var index;
     var result = 0;
-    for (var index in col) {
+    isTallest = isTallest || false;
+    for (index in col) {
       if (index === 0) {
         result = index;
       }
@@ -61,8 +139,8 @@ $.fn.paving = function () {
   };
 
   var getInt = function (val, def) {
-    def = def || 0;
     var result = parseInt(val, 10);
+    def = def || 0;
     if (isNaN(result)) {
       result = def;
     }
@@ -80,85 +158,54 @@ $.fn.paving = function () {
     return result;
   };
 
-  var pave = function (parent, isAppending) {
-    var i, len; // for loop counter.
-    var container_offset, lefts, column; // you always need them.
-    var $parent = $(parent);
-    var defaults = getDefaults($parent, opts);
-    if (typeof defaults.lefts === 'undefined') {
-      isAppending = false;
+  var buildFundamentals = function ($parent, $firstItem) {
+    var container_width = $parent.width();
+    var item_width = $firstItem.outerWidth(true);    
+    var container_offset = {
+      left: getInt($parent.css('padding-left')),
+      top: getInt($parent.css('padding-top'))
+    };
+    var lefts = [];
+    var column = {};
+    var column_len = Math.floor(container_width / item_width);
+    var i;
+    for (i = 0; i < column_len; ++i) {
+      column[i] = 0;
+      lefts[i] = item_width * i;
     }
-    var selector = buildSelector(defaults.selector, (isAppending ? defaults.marking : undefined));
-    var $items = $parent.find(selector);
-    if ($items.length === 0) {
-      // console.log('no elements to pave');
-      return;
-    }
-    if (isAppending) {
-      container_offset = defaults.container_offset;
-      lefts = defaults.lefts;
-      column = defaults.column;
-    }
-    else {
-      defaults.container_offset = container_offset = {
-        left: getInt($parent.css('padding-left')),
-        top: getInt($parent.css('padding-top'))
-      };
-      defaults.lefts = lefts = [];
-      defaults.column = column = {};
-
-      var container_width = $parent.width();
-      var item_width = $items.first().outerWidth(true);
-      var column_len = Math.floor(container_width / item_width);
-
-      for (i = 0, len = column_len; i < len; ++i) {
-        column[i] = 0;
-        lefts[i] = item_width * i;
-      }
-    }
-
-    var $item, height, index;
-    for(i = 0, len = $items.length; i < len; ++i) {
-      $item = $($items[i]);
-      height = $item.outerHeight(true);
-
-      if (column_len && i < column_len) {
-        index = i;
-      }
-      else {
-        index = findColumnIndex(column);
-      }
-
-      // marking        
-      var obj =  {
-        position: 'absolute',
-        left: container_offset.left + lefts[index],
-        top: container_offset.top + column[index]
-      };
-      $item.css(obj);
-      $item.data('height', height);
-      $item.attr('data-' + defaults.marking, 'true');
-      column[index] = column[index] + height;
-      defaults.callback($item[0]);
-    }
-    $parent.height(column[findColumnIndex(column, true)]);
-    setTimeout(
-      function () {
-        defaults.finish();
-      },
-      13
-    );
+    return {
+      container_offset: container_offset,
+      lefts: lefts,
+      column: column,
+      column_len: column_len
+    };
   };
 
   // ==============================
 
   var methods = {
-    init: function (i) {
+    init: function (i, elm) {
       pave(this);
       return this;
     },
-    append: function (i) {
+    append: function (i, elm) {
       pave(this, true); 
+      return this;
+    },
+    add: function (i) {
+      var $this = $(this);
+      var def = getDefaults($this, opts);
+      var $item = $(args[0]);
+      var index = args[1];
+      $this.append($item);
+      paveStone($item[0], def, undefined, index);
+      $this.height( def.column[findColumnIndex(def.column, true)] );
+      setTimeout(
+        function () {
+          def.finish();
+        },
+        MILSEC_FINISH
+      );
       return this;
     }
   };
