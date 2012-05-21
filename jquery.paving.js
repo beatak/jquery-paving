@@ -106,6 +106,7 @@ var paveStone = function (item, defaults, i, index) {
   var count = defaults.count;
   var $item = $(item);
   var height = $item.outerHeight(true);
+  var cumulative_count = count + i;
 
   if (index !== undefined) {
     index = parseInt(index, 10);
@@ -114,8 +115,8 @@ var paveStone = function (item, defaults, i, index) {
     }
   }
   if (index === undefined) {
-    if (i !== undefined && count < column_len && i < column_len) {
-      index = i;
+    if (i !== undefined && count < column_len && cumulative_count < column_len) {
+      index = cumulative_count;
     }
     else {
       index = findColumnIndex(column);
