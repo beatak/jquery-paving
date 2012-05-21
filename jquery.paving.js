@@ -59,7 +59,7 @@ $.fn.paving = function () {
         $.extend(def, buildFundamentals($this, $item.first()));
       }
       $this.append($item);
-      paveStone($item[0], def, i, args[1]);
+      paveStone($item[0], def, args[1]);
       finishPaving($this, def.finish, def.column);
     }
   };
@@ -88,7 +88,7 @@ var pave = function (parent, opts, isAppending) {
     $.extend(defaults, buildFundamentals($parent, $items.first()));
   }
   for (i = 0, len = $items.length; i < len; ++i) {
-    elm = paveStone($items[i], defaults, i);
+    elm = paveStone($items[i], defaults);
     if (callbackExists) {
       defaults.callback(elm, defaults.column);
     }
@@ -97,7 +97,7 @@ var pave = function (parent, opts, isAppending) {
   finishPaving($parent, defaults.finish, defaults.column);
 };
 
-var paveStone = function (item, defaults, i, index) {
+var paveStone = function (item, defaults, index) {
   var container_offset = defaults.container_offset;
   var column = defaults.column;
   var lefts = defaults.lefts;
@@ -106,7 +106,6 @@ var paveStone = function (item, defaults, i, index) {
   var count = defaults.count;
   var $item = $(item);
   var height = $item.outerHeight(true);
-  var cumulative_count = count + i;
 
   if (index !== undefined) {
     index = parseInt(index, 10);
@@ -115,12 +114,7 @@ var paveStone = function (item, defaults, i, index) {
     }
   }
   if (index === undefined) {
-    if (i !== undefined && count < column_len && cumulative_count < column_len) {
-      index = cumulative_count;
-    }
-    else {
-      index = findColumnIndex(column);
-    }
+    index = findColumnIndex(column);
   }
 
   // marking        
@@ -171,21 +165,26 @@ var findColumnIndex = function (col, isTallest) {
   var index;
   var result = 0;
   isTallest = isTallest || false;
-  for (index in col) {
+  loop:for (index in col) {
     index = parseInt(index, 10);
     if (index === 0) {
       result = index;
+      if (isTallest) {
+        continue loop;
+      }
+    }
+    if (isTallest) {
+      if (col[index] > col[result]) {
+        result = index;
+      }
     }
     else {
-      if (isTallest) {
-        if (col[index] > col[result]) {
-          result = index;
-        }
+      if (col[index] === 0) {
+        result = index;
+        break loop;
       }
-      else {
-        if (col[index] < col[result]) {
-          result = index;
-        }
+      if (col[index] < col[result]) {
+        result = index;
       }
     }
   }
