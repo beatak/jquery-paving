@@ -49,7 +49,7 @@ $.fn.paving = function () {
     },
     add: function (i, elm) {
       var $this = $(this);
-      var def = getDefaults($this, opts);
+      var def = getDefaults($this, opts, true);
       var $item = $(args[0]);
       if ($item.length === 0) {
         // console.log('nothing is to pave.');
@@ -146,14 +146,18 @@ var finishPaving = function ($parent, finish, column) {
   );
 };
 
-var getDefaults = function ($parent, opts) {
+var getDefaults = function ($parent, opts, isNotModifying) {
   var name;
   var defaults = $parent.data('paving-defaults');
+  isNotModifying = isNotModifying || false;
   if (!defaults) {
     defaults = $.extend({}, DEFAULT_OPTIONS, opts || {});
     $parent.data('paving-defaults', defaults);
   }
   else {
+    if (isNotModifying) {
+      defaults = $.extend({}, defaults);
+    }
     for (name in opts) {
       defaults[name] = opts[name];
     }
