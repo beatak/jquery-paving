@@ -17,7 +17,7 @@ var MILSEC_FINISH = 13;
 $.fn.paving = function () {
   var method, opts, args;
 
-  // determin method, opts and arguments
+  // determine method, opts and arguments
   if (typeof arguments[0] === 'string') {
     method = arguments[0].toLowerCase();
 
