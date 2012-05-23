@@ -53,7 +53,7 @@ $.fn.paving = function () {
       var $item = $(args[0]);
       if ($item.length === 0) {
         // console.log('nothing is to pave.');
-        return;
+        return this;
       }
       if (typeof def.lefts === 'undefined') {
         $.extend(def, buildFundamentals($this, $item.first()));
@@ -61,6 +61,7 @@ $.fn.paving = function () {
       $this.append($item);
       paveStone($item[0], def, args[1]);
       finishPaving($this, def.finish, def.column);
+      return this;
     }
   };
 
