@@ -74,31 +74,29 @@ var pave = function (parent, opts, isAppending) {
   var i;
   var len;
   var elm;
+  var $items;
   var $parent = $(parent);
   var defaults = getDefaults($parent, opts);
-  var $items = $parent.find( buildSelector(defaults.selector, (isAppending ? defaults.marking : undefined)) );
-  var column = defaults.column;
-  var callback = defaults.callback;
-  var finish = defaults.finish;
-  var callbackExists = typeof callback === 'function';
   if (typeof defaults.lefts === 'undefined') {
     isAppending = false;
   }
+  $items = $parent.find( buildSelector(defaults.selector, (isAppending ? defaults.marking : undefined)) );
   if ($items.length === 0) {
     // console.log('no elements to pave');
     return;
   }
   if (!isAppending) {
+    // it looks a bit confusing, since all options are stored in defaults,
+    // but buildFundamentals() won't change things like selector nor callback/finish
     $.extend(defaults, buildFundamentals($parent, $items.first()));
   }
   for (i = 0, len = $items.length; i < len; ++i) {
     elm = paveStone($items[i], defaults);
-    if (callbackExists) {
-      callback(elm, column);
+    if (typeof defaults.callback === 'function') {
+      defaults.callback(elm, defaults.column);
     }
   }
-
-  finishPaving($parent, finish, column);
+  finishPaving($parent, defaults.finish, defaults.column);
 };
 
 var paveStone = function (item, defaults, index) {
