@@ -77,7 +77,10 @@ var pave = function (parent, opts, isAppending) {
   var $parent = $(parent);
   var defaults = getDefaults($parent, opts);
   var $items = $parent.find( buildSelector(defaults.selector, (isAppending ? defaults.marking : undefined)) );
-  var callbackExists = typeof defaults.callback === 'function';
+  var column = defaults.column;
+  var callback = defaults.callback;
+  var finish = defaults.finish;
+  var callbackExists = typeof callback === 'function';
   if (typeof defaults.lefts === 'undefined') {
     isAppending = false;
   }
@@ -91,11 +94,11 @@ var pave = function (parent, opts, isAppending) {
   for (i = 0, len = $items.length; i < len; ++i) {
     elm = paveStone($items[i], defaults);
     if (callbackExists) {
-      defaults.callback(elm, defaults.column);
+      callback(elm, column);
     }
   }
 
-  finishPaving($parent, defaults.finish, defaults.column);
+  finishPaving($parent, finish, column);
 };
 
 var paveStone = function (item, defaults, index) {
