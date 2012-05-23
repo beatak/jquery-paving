@@ -99,6 +99,7 @@ var pave = function (parent, opts, isAppending) {
 };
 
 var paveStone = function (item, defaults, index) {
+  var obj;
   var container_offset = defaults.container_offset;
   var column = defaults.column;
   var lefts = defaults.lefts;
@@ -119,7 +120,7 @@ var paveStone = function (item, defaults, index) {
   }
 
   // marking        
-  var obj =  {
+  obj =  {
     position: 'absolute',
     left: container_offset.left + lefts[index],
     top: container_offset.top + column[index]
