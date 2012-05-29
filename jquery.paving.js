@@ -1,5 +1,4 @@
-(
-function($, window) {
+(function($) {
 
 var DEFAULT_OPTIONS = {
   selector: '.stone',
@@ -11,8 +10,10 @@ var DEFAULT_OPTIONS = {
 var MILSEC_FINISH = 13;
 
 /**
- * short and simple way to layout block elements into neatly
- * tightly packed.
+ * jQuery.paving
+ * (c) 2012, Takashi Mizohata
+ * http://beatak.github.com/jquery-paving/
+ * MIT LICENSE
  */
 $.fn.paving = function () {
   var method, opts, args;
@@ -250,4 +251,4 @@ var isDOM = function (element) {
   return result;
 };
 
-})(jQuery, window);
+})(jQuery);
