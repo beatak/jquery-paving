@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>jQuery.paving()</title>
+    <link rel="stylesheet" href="assets/index.css" type="text/css" />
+  </head>
+  <body>
+
+    <header>
+      <h1>jQuery.paving()</h1>
+      <p class="download-info">
+        <a href="http://github.com/beatak/jquery-imageloader/">View project on GitHub</a>
+      </p>
+      <p>
+        <button id="add-five" class="adding-button">Add five</button> <button id="add-one" class="adding-button">Add one</button><br />
+        <input id="add-index" maxlength="1" value="4" /><button id="add-by-index" class="adding-button">Add one by index</button>
+      </p>
+    </header>
+
+    <div id="container" class="clearfix"></div>
+
+    <footer>
+      <p>Designed in <a href="http://www.meetup.com/" target="_blank">Meetup</a> by <a href="http://twitter.com/beatak" target="_blank">@beatak</a>.</p>
+      <p>Code licensed under the MIT. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+      <p class="specialthx">
+        Special thanks to: 
+        <a href="http://www.flickr.com/photos/hyougushi/25408603/" target="_blank">hyougushi</a>
+        <a href="http://www.flickr.com/photos/kamshots/2912008257/" target="_blank">kamshots</a>
+        <a href="http://www.flickr.com/photos/90461913@N00/6447337643/" target="_blank">Ding Yuin Shan</a>
+        <a href="http://www.flickr.com/photos/http2007/523479910/" target="_blank">http2007</a>
+        <a href="http://www.flickr.com/photos/eflon/7015048201/" target="_blank">eflon</a>
+        <a href="http://www.flickr.com/photos/securecat/3947008043/" target="_blank">securecat</a>
+        <a href="http://www.flickr.com/photos/3336/96905377/" target="_blank">Diego3336</a>
+        <a href="http://www.flickr.com/photos/babasteve/2652750558/" target="_blank">babasteve</a>
+        <a href="http://www.flickr.com/photos/atbaker/87296938/" target="_blank">AlphaTangoBravo / Adam Baker</a>
+        <a href="http://www.flickr.com/photos/eneas/3108310839/" target="_blank">Eneas</a>
+        <a href="http://www.flickr.com/photos/bigberto/2243614234/" target="_blank">~MVI~</a>
+        <a href="http://www.flickr.com/photos/flissphil/44288166/" target="_blank">PhillipC</a>
+        <a href="http://www.flickr.com/photos/nosha/6775506209/" target="_blank">nosha</a><br />
+        <a href="http://www.flickr.com/photos/martix/3557998991/" target="_blank">Martintoy</a>
+        <a href="http://www.flickr.com/photos/zouzouwizman/12129004/" target="_blank">zouzouwizman</a>
+        <a href="http://www.flickr.com/photos/kaushiknarasimhan/5038977953/" target="_blank">Kazarelth</a>
+        <a href="http://www.flickr.com/photos/25652913@N03/4875304602/" target="_blank">Comrogues</a>
+        <a href="http://www.flickr.com/photos/joe-joe/2303992129/" target="_blank">yohanes budiyanto</a>
+        <a href="http://www.flickr.com/photos/kervintran/2762938556/" target="_blank">Klardrommar</a>
+        <a href="http://www.flickr.com/photos/51642409@N06/7112041479/" target="_blank">Nikhil Bhattacharyya</a>
+        <a href="http://www.flickr.com/photos/archer10/2214286789/" target="_blank">archer10 (Dennis)</a>
+        <a href="http://www.flickr.com/photos/archer10/2216719429/" target="_blank">archer10 (Dennis)</a>
+        <a href="http://www.flickr.com/photos/ana_cotta/2711677973/" target="_blank">Ana_Cotta</a>
+        <a href="http://www.flickr.com/photos/pedrosz/5796344537/" target="_blank">szeke</a>
+        <a href="http://www.flickr.com/photos/yakobusan/2436481628/" target="_blank">@yakobusan Jakob Montrasio</a>
+      </p>
+    </footer>
+
+    <div id="bullpen"></div>
+
+<script type="text/template" id="tmpl-stone">
+  <div class="stone"><img class="lazy-img" src="assets/0.png" data-src="{{src}}" /></div>
+</script>
+
+<script type="text/javascript" src="assets/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="assets/mustache.js"></script>
+<script type="text/javascript" src="assets/jquery.imageloader.js"></script>
+<script type="text/javascript" src="jquery.paving.js"></script>
+<script type="text/javascript" src="assets/index.js"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32167502-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </body>
+</html>
