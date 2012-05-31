@@ -6,7 +6,7 @@ jQuery.paving() offers a neatly packed layout with same-width/varying-height ele
 DEMO
 ----
 
-coming soon
+[beatak.github.com/jquery-paving/](http://beatak.github.com/jquery-paving/ "demo")
 
 EXAMPLE
 -------
