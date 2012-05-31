@@ -61,7 +61,19 @@ $.fn.paving = function () {
       }
       $this.append($item);
       paveStone($item[0], def, args[1]);
+      if (typeof def.callback === 'function') {
+        def.callback($item[0], def.column);
+      }
       finishPaving($this, def.finish, def.column);
+      return this;
+    },
+    clear: function (i, elm) {
+      clear(this, opts);
+      return this;
+    },
+    refresh: function (i, elm) {
+      clear(this, opts);
+      pave(this, opts);
       return this;
     }
   };
@@ -249,6 +261,19 @@ var isDOM = function (element) {
     result = true;
   }
   return result;
+};
+
+var clear = function (parent, opts) {
+  var $parent = $(parent);
+  var def = getDefaults($parent, opts, true);
+  $(def.selector)
+    .removeAttr('style')
+    .each(
+      function (i, elm) {
+        var data = $(elm).data();
+        delete data[def.marking];
+      }
+    );
 };
 
 })(jQuery);
