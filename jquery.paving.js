@@ -266,7 +266,7 @@ var isDOM = function (element) {
 var clear = function (parent, opts) {
   var $parent = $(parent);
   var def = getDefaults($parent, opts, true);
-  $(def.selector)
+  $parent.find(def.selector)
     .removeAttr('style')
     .each(
       function (i, elm) {
