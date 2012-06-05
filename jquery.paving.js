@@ -34,7 +34,7 @@ $.fn.paving = function () {
   else {
     method = 'init';
     opts = arguments[0];
-    args = Array.prototype.slice.call(arguments, 2);
+    args = Array.prototype.slice.call(arguments, 1);
   }
 
   // ==============================
